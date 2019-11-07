@@ -1,0 +1,37 @@
+plugins {
+    id "org.springframework.boot" version "2.1.2.RELEASE" apply false
+}
+
+allprojects {
+    apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        jcenter()
+    }
+
+    dependencyManagement {
+        overriddenByDependencies = false
+
+        dependencies {
+            dependency 'io.sentry:sentry-logback:1.7.13'
+        }
+    }
+}
+
+subprojects {
+    apply plugin:'java'
+
+    targetCompatibility = sourceCompatibility = 11
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+

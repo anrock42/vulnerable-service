@@ -1,0 +1,4 @@
+rootProject.name = 'vulnerable-server'
+
+include 'app'
+

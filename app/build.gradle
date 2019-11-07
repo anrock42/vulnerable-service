@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+}
+
+group 'vulnerable-service'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+
+
+dependencies {
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor  'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+
+    compile 'org.springframework.boot:spring-boot-starter-webflux'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtime 'mysql:mysql-connector-java'
+    compile 'com.amazonaws:aws-java-sdk-dynamodb'
+    compile 'com.github.derjust:spring-data-dynamodb:4.3.1'
+    runtime 'io.sentry:sentry-logback'
+    runtime 'org.codehaus.janino:janino'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'io.rest-assured:rest-assured'
+    testCompile 'org.assertj:assertj-core'
+
+}

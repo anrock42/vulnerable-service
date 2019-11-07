@@ -1,0 +1,20 @@
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health,info
+spring:
+  cache:
+    type: NONE
+
+logging:
+  pattern:
+    level: "%5p %X{}"
+
+server:
+  use-forward-headers: true
+
+amazon.dynamodb.endpoint: http://localhost:8000/
+amazon.aws.accesskey: key
+amazon.aws.secretkey: key2
