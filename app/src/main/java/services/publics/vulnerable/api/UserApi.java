@@ -1,5 +1,9 @@
 package services.publics.vulnerable.api;
 
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
@@ -11,46 +15,51 @@ import reactor.core.publisher.Mono;
 import services.publics.vulnerable.db.UserRepository;
 import services.publics.vulnerable.entity.User;
 import services.publics.vulnerable.entity.UserDTO;
+import services.publics.vulnerable.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
 
-@RestController("/test")
+@RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true)
+@Slf4j
 public class UserApi {
 
-    @Autowired
     ConversionService conversionService;
 
-    @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
-    @Autowired
-    protected JdbcTemplate jdbcTemplate;
-
-    @PostMapping("/users")
-    public CompletableFuture<ResponseEntity<UserDTO>> createUser(
+    @PostMapping
+    public Mono<ResponseEntity<UserDTO>> createUser(
             @RequestBody @Valid UserDTO request
     ) {
         return Mono.just(request)
                 .map(userDTO -> conversionService.convert(userDTO, User.class))
-                .map(user -> userRepository.save(user))
+                .map(userService::save)
                 .map(user -> conversionService.convert(user, UserDTO.class))
-                .map(response -> ResponseEntity.ok(response))
-                .toFuture();
-    }
-
-    @GetMapping("/users")
-    public boolean userExists(@RequestParam("email") String email) {
-        return jdbcTemplate.queryForList(String.format("SELECT * FROM users WHERE email LIKE %s", email))
-                .isEmpty();
+                .map(response -> ResponseEntity.ok(response));
     }
 
     @GetMapping
-    public String redirect(@RequestParam String url) {
-        return "redirect:" + url;
+    public List<UserDTO> findUser(@RequestParam("email") String email) {
+        // CLRF attack
+        log.info("Received GET:{}", email);
+        if(! email.contains("@")) {
+            // Reflected XSS
+            throw new IllegalArgumentException(String.format("Email %s does not look like an email!", email));
+        }
+
+        // stored XSS
+        return userService.findUsers(email)
+                .stream()
+                .map(user -> conversionService.convert(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
 

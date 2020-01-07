@@ -18,14 +18,18 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
 
+    runtime 'mysql:mysql-connector-java'
+
     compile 'org.springframework.boot:spring-boot-starter-webflux'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtime 'mysql:mysql-connector-java'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc'
     compile 'com.amazonaws:aws-java-sdk-dynamodb'
     compile 'com.github.derjust:spring-data-dynamodb:4.3.1'
     runtime 'io.sentry:sentry-logback'
     runtime 'org.codehaus.janino:janino'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    compile 'org.testcontainers:mysql'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'io.rest-assured:rest-assured'

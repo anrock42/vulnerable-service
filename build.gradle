@@ -1,9 +1,28 @@
+
+
+buildscript {
+
+    repositories {
+
+        mavenCentral()
+
+    }
+
+    dependencies {
+
+        classpath "com.softwaresecured.reshift:gradle-plugin:1.+"
+
+    }
+
+}
+
 plugins {
     id "org.springframework.boot" version "2.1.2.RELEASE" apply false
 }
 
 allprojects {
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: "com.softwaresecured.reshift"
 
     repositories {
         jcenter()
@@ -11,6 +30,10 @@ allprojects {
 
     dependencyManagement {
         overriddenByDependencies = false
+
+        imports {
+            mavenBom 'org.testcontainers:testcontainers-bom:1.12.3'
+        }
 
         dependencies {
             dependency 'io.sentry:sentry-logback:1.7.13'
@@ -24,6 +47,7 @@ subprojects {
     targetCompatibility = sourceCompatibility = 11
 
     dependencies {
+        testCompile 'org.mockito:mockito-junit-jupiter'
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
         testImplementation 'org.junit.jupiter:junit-jupiter-params'
 
