@@ -1,42 +1,40 @@
-
-
-buildscript {
-
-    repositories {
-
-        mavenCentral()
-
-    }
-
-    dependencies {
-
-        classpath "com.softwaresecured.reshift:gradle-plugin:1.+"
-
-    }
-
-}
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id "org.springframework.boot" version "2.1.2.RELEASE" apply false
+    id "org.springframework.boot" version "2.1.9.RELEASE" apply false
 }
 
 allprojects {
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: "com.softwaresecured.reshift"
+//    apply plugin: "com.softwaresecured.reshift"
 
     repositories {
+        mavenCentral()
         jcenter()
+        jcenter {
+            url "http://oss.jfrog.org/artifactory/oss-snapshot-local/"
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://repo.spring.io/milestone' }
     }
 
     dependencyManagement {
         overriddenByDependencies = false
 
         imports {
-            mavenBom 'org.testcontainers:testcontainers-bom:1.12.3'
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+            mavenBom 'org.testcontainers:testcontainers-bom:1.12.4'
         }
 
         dependencies {
             dependency 'io.sentry:sentry-logback:1.7.13'
+            dependencySet(group: 'io.springfox', version: '2.9.2') {
+                entry 'springfox-swagger-ui'
+                entry 'springfox-swagger2'
+            }
         }
     }
 }
@@ -47,7 +45,6 @@ subprojects {
     targetCompatibility = sourceCompatibility = 11
 
     dependencies {
-        testCompile 'org.mockito:mockito-junit-jupiter'
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
         testImplementation 'org.junit.jupiter:junit-jupiter-params'
 

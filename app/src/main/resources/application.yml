@@ -14,7 +14,3 @@ logging:
 
 server:
   use-forward-headers: true
-
-amazon.dynamodb.endpoint: http://localhost:8000/
-amazon.aws.accesskey: key
-amazon.aws.secretkey: key2

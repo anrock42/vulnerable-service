@@ -1,10 +1,11 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot'
 }
 
 group 'vulnerable-service'
 version '1.0-SNAPSHOT'
+apply plugin: 'org.springframework.boot'
+
 
 repositories {
     mavenCentral()
@@ -20,9 +21,15 @@ dependencies {
 
     runtime 'mysql:mysql-connector-java'
 
+
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-webflux'
+    compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    compile 'io.springfox:springfox-swagger2'
+
     compile 'com.amazonaws:aws-java-sdk-dynamodb'
     compile 'com.github.derjust:spring-data-dynamodb:4.3.1'
     runtime 'io.sentry:sentry-logback'
