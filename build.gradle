@@ -1,12 +1,34 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        /*
+        ./gradlew build reshiftAnalyse reshiftUpload -Dreshift.token=yKbOb6Tl6tIRRYFP0guN6CB1WSlSflPCnZOqUuPfgu4=
+         */
+        classpath "com.softwaresecured.reshift:gradle-plugin:1.+"
+    }
+}
+
 plugins {
     id "org.springframework.boot" version "2.1.9.RELEASE" apply false
+    id "org.sonarqube" version "2.8"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "anrock42_vulnerable-service"
+        property "sonar.organization", "anrock42"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", "375e8248e05fdf341c31f7457ce5300d2887a313"
+    }
 }
 
 allprojects {
     apply plugin: 'io.spring.dependency-management'
-//    apply plugin: "com.softwaresecured.reshift"
+    apply plugin: "com.softwaresecured.reshift"
 
     repositories {
         mavenCentral()
