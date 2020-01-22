@@ -29,36 +29,34 @@ public class UserApiTest extends IntegrationTest {
 
     @Test
     public void shouldCreateUser() {
-        UserDTO userDTO = new UserDTO(UUID.randomUUID().toString(), "dave@david.d");
-
-        UserDTO userDTOResponse = given()
-                .when()
-                .contentType("application/json")
-                .body(userDTO)
-                .post("/users")
+        List<?> userDTOResponse = given(requestSpecification)
+                .param("email", "dave@")
+                .get("/users")
                 .then()
                 .statusCode(200)
                 .extract()
-                .body()
                 .jsonPath()
-                .get();
+                .getList("");
 
-        assertThat(userDTOResponse).isEqualTo(userDTO);
+        assertThat(userDTOResponse).hasSize(1);
     }
 
     @Test
     public void shouldReturnUser() {
-        UserDTO userDTO = new UserDTO(UUID.randomUUID().toString(), "dave@david.d");
+        String id = UUID.randomUUID().toString();
+        String email = "dave@david.d";
 
-        List<UserDTO> userDTOResponse = given()
-                .get("/users?dave@")
+        repository.save(new User(id, email, "password"));
+
+        List<?> userDTOResponse = given(requestSpecification)
+                .param("email", "dave@")
+                .get("/users")
                 .then()
                 .statusCode(200)
                 .extract()
-                .body()
                 .jsonPath()
-                .get();
+                .getList("");
 
-        assertThat(userDTOResponse).isEqualTo(userDTO);
+        assertThat(userDTOResponse).hasSize(1);
     }
 }
